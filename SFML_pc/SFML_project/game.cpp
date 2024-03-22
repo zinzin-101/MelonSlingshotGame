@@ -174,56 +174,49 @@ void GameInit() {
 	sNumTex++;
 	sNumSprite++;
 
+	sTexArray[sNumTex].loadFromFile("asset\\object.png");
+	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
+	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
+	sNumTex++;
+	sNumSprite++;
+
 	// Create the background instance
 	//	- Creation order is important when rendering, so we should create the background first
 	gameObjInstCreate(TYPE_BACKGROUND, glm::vec3(window.getSize().x/2, window.getSize().y/2, 0.0f), 
-		glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(window.getSize().x/640.0, window.getSize().y/360.0, 1.0f), 
+		glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(window.getSize().x / 2160.0, window.getSize().y / 1215.0, 1.0f),
 		0, false, 0, false, 0, 0, 0);
 
-	// Create player game object instance
-	//	- the position.z should be set to 0
-	//	- the scale.z should be set to 1
-	//	- the velocity.z should be set to 0
-	sPlayer = gameObjInstCreate(TYPE_SHIP, glm::vec3(window.getSize().x / 2, window.getSize().y / 1.2, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(300.0f/1000, 300.0f/1000, 1.0f), 
-		0.0f, false, 0, false, 0, 0 ,1000);
-
-	// Create all asteroid instance with random pos and velocity
-	//	- int a = rand() % 30 + 20;							// a is in the range 20-50
-	//	- float b = (float)rand()/(float)(RAND_MAX);		// b is the range 0..1
-	for (int i = 0; i < NUM_ENEMY; i++) {
+	for (int i = 0; i < 10; i++) {
 		int rand_s = rand();
-		gameObjInstCreate(TYPE_ENEMY, glm::vec3(rand() % MAX_X, rand() % (MAX_Y - 300), 0.0f),
-			glm::vec3(ENEMY_SPEED * ((2 * (float)rand() / (float)(RAND_MAX)) - 1), ENEMY_SPEED * ((2 * (float)rand() / (float)(RAND_MAX)) - 1), 0.0f),
-			//glm::vec3(rand() % 50 + 20, rand() % 50 + 20, 1.0f), (2 * PI * (float)rand() / (float)(RAND_MAX)));
-			glm::vec3(350.0f / 1000, 350.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+		gameObjInstCreate(TYPE_OBJECT, glm::vec3(rand() % window.getSize().x, rand() % (window.getSize().y - 300), 0.0f),
+			glm::vec3(50.0 * ((2 * (float)rand() / (float)(RAND_MAX)) - 1), 0.0f, 0.0f),
+			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 	}
 
 
-	
 	// set view
 	//view.setCenter(window.getSize().x/2, window.getSize().y/2);
-	view.setCenter(sPlayer->position.x, sPlayer->position.y);
 	view.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+	view.setCenter(window.getSize().x / 2.0, window.getSize().y / 2.0);
+
 	view.setRotation(0.0f);
 
 	std::cout << "game init" << std::endl;
-
-	sPlayer->velocity = glm::vec3(0.0, 0.0, 0.0);
 }
 
 
 
 void GameUpdate(double dt, long frame, int &state) {
-	//std::cout << sPlayer->position.x << "," << sPlayer->position.y << std::endl;
+
 	//-----------------------------------------
 	// Get user input
 	//-----------------------------------------
-	// Moving the Player
-	//	- WS accelereate/deaccelerate the ship
-	//		- use accelerateion to change velocity
-	//		- has velocity cap
-	//	- AD turn the ship
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{
+		sf::Vector2i position = sf::Mouse::getPosition(window);
+		std::cout << "x: " << position.x << ", y: " << position.y << std::endl;
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 
 	}
@@ -273,10 +266,21 @@ void GameUpdate(double dt, long frame, int &state) {
 		if (pInst->flag == FLAG_INACTIVE)
 			continue;
 
-		// for Ship: it will experice a slow down due to friction
-		// for Asteroid, bullet: constant velocity
-		if (pInst->type == TYPE_SHIP) {
+		if (pInst->type == TYPE_OBJECT) {
+			if (pInst->position.y < window.getSize().y) {
+				pInst->velocity.y = pInst->velocity.y + (DEFAULT_GRAVITY * dt);
+			}
+			else{
+				pInst->position.y = window.getSize().y;
+				pInst->velocity = glm::vec3(pInst->velocity.x, -pInst->velocity.y * 0.5, 0);
 
+			}
+
+			if (!(0.0 < pInst->position.x && pInst->position.x < window.getSize().x)) {
+				pInst->velocity = glm::vec3(-pInst->velocity.x * 0.95, pInst->velocity.y, 0);
+			}
+
+			pInst->position += pInst->velocity;
 		}
 
 	}
@@ -336,20 +340,27 @@ void GameUpdate(double dt, long frame, int &state) {
 		if (pInst1->flag == FLAG_INACTIVE)
 			continue;
 
-		if (pInst1->type == TYPE_SHIP) {
+		if (pInst1->type == TYPE_OBJECT) {
 			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
 				GameObj* pInst2 = sGameObjInstArray + j;
+
+				if (i == j) {
+					continue;
+				}
 
 				if (pInst2->flag == FLAG_INACTIVE) {
 					continue;
 				}
 
-				if (pInst2->type == TYPE_ENEMY_BULLET) {
+				if (pInst2->type == TYPE_OBJECT) {
 					float distance = glm::length(pInst1->position - pInst2->position);
-					if (distance <= 15.0) {
-
-
-						gameObjInstDestroy(*pInst2);
+					if (distance <= 50.0) {
+						float tempX = pInst1->velocity.x;
+						float tempY = pInst1->velocity.y;
+						pInst1->velocity.x = -pInst2->velocity.x * 0.9;
+						pInst1->velocity.y = -pInst2->velocity.y;
+						pInst2->velocity.x = -tempX * 0.9;
+						pInst2->velocity.y = -tempY;
 					}
 					
 				}
@@ -358,10 +369,6 @@ void GameUpdate(double dt, long frame, int &state) {
 
 	}
 
-	//Update camera view
-	if (sPlayer->flag == FLAG_ACTIVE) {
-		view.setCenter(sPlayer->position.x, sPlayer->position.y);
-	}
 
 	double fps = 1.0 / dt;
 	//printf("Level1: Update @> %f fps, frame>%ld\n", fps, frame);

@@ -21,26 +21,7 @@ extern sf::RenderWindow window;
 #define TEXTURE_MAX					32				// The total number of texture
 #define GAME_OBJ_INST_MAX			1024			// The total number of different game object instances
 #define PLAYER_INITIAL_NUM			20				// initial number of ship lives
-#define NUM_ENEMY					12
-#define SHIP_ACC_FWD				-250.0f			// ship forward acceleration (in m/s^2)
-#define SHIP_ACC_BWD				300.0f			// ship backward acceleration (in m/s^2)
-#define SHIP_ROT_SPEED				(1.75 * PI)		// ship rotation speed (degree/second)
-#define HOMING_MISSILE_ROT_SPEED	(PI / 2.0f)		// homing missile rotation speed (degree/second)
-#define BULLET_SPEED				-625.0f
-#define MISSILE_SPEED               -475.0f
-#define ENEMY_SPEED					175.0f	
-#define MAX_SHIP_VELOCITY			275.0f
-#define BASE_SHIP_VELOCITY          150.0f
-#define MIN_SHIP_VELOCITY			75.0f
-#define ENEMY_TURN_SPEED			PI
-#define DEFAULT_RELOAD_DELAY		0.75f
-#define DEFAULT_MISSILE_COUNT		2
-#define DEFAULT_CHAFF_FLARE_COUNT	5
-#define MAX_BOSS_HEALTH				30
-#define MIN_X						-1500
-#define MAX_X						3200
-#define MIN_Y						-900
-#define MAX_Y						1700
+#define DEFAULT_GRAVITY				9.81
 
 
 enum GAMEOBJ_TYPE
@@ -57,7 +38,8 @@ enum GAMEOBJ_TYPE
 	TYPE_MISSILE_CONTRAIL,
 	TYPE_CHAFF_FLARE,
 	TYPE_BOSS,
-	TYPE_BOSS_FLARE
+	TYPE_BOSS_FLARE,
+	TYPE_OBJECT
 };
 
 #define FLAG_INACTIVE		0

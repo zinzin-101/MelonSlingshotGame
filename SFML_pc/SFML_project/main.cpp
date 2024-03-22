@@ -33,7 +33,7 @@ unsigned int	gGameStateNext;
 int main()
 {
     // create window
-    window.create(sf::VideoMode(1600, 900), "Game");
+    window.create(sf::VideoMode(1280, 720), "Game");
     window.setFramerateLimit(60);
 
     // Initialize Game State (to level 1)
