@@ -22,24 +22,22 @@ extern sf::RenderWindow window;
 #define GAME_OBJ_INST_MAX			1024			// The total number of different game object instances
 #define PLAYER_INITIAL_NUM			20				// initial number of ship lives
 #define DEFAULT_GRAVITY				9.81
+#define DEFAULT_RADIUS				50.0f
 
 
 enum GAMEOBJ_TYPE
 {
 	// list of game object types
 	TYPE_BACKGROUND = 0,
-	TYPE_BULLET,
-	TYPE_MISSILE,
-	TYPE_SHIP,
-	TYPE_ENEMY,
-	TYPE_EXPLOSION,
-	TYPE_ENEMY_BULLET,
-	TYPE_ENEMY_MISSILE,
-	TYPE_MISSILE_CONTRAIL,
-	TYPE_CHAFF_FLARE,
-	TYPE_BOSS,
-	TYPE_BOSS_FLARE,
-	TYPE_OBJECT
+	TYPE_OBJECT,
+	TYPE_BOX
+};
+
+enum COLLSION_SIDE {
+	COL_TOP,
+	COL_SIDE,
+	COL_BOTTOM,
+	COL_NONE
 };
 
 #define FLAG_INACTIVE		0
@@ -68,6 +66,7 @@ struct GameObj
 	int				frameSizeX;			// frame size, assume single row sprite sheet
 	int				currOffset;
 	glm::vec3		targetPos;
+	bool			enablePhysics;
 
 	int				health;
 };
@@ -79,6 +78,7 @@ static GameObj* gameObjInstCreate(int type, glm::vec3 pos, glm::vec3 vel, glm::v
 								bool mortal, int life, bool anim, int numFrame, int currFrame, int offsetX);
 static void		gameObjInstDestroy(GameObj& pInst);
 
+bool checkCollisionSquareCircle(glm::vec3 square, glm::vec3 circle, float halfWidth, int &collisionType);
 float dotAngle(glm::vec3 v1, glm::vec3 v2);
 
 void GameInit();

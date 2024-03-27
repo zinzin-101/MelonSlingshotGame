@@ -14,6 +14,8 @@ static int			sNumTex;
 
 static GameObj*		sPlayer;										// Pointer to the Player game object instance
 
+static glm::vec3 prevMousePos;
+static bool isMouseDown;
 
 // View
 sf::View view;
@@ -47,7 +49,16 @@ GameObj* gameObjInstCreate(int type, glm::vec3 pos, glm::vec3 vel, glm::vec3 sca
 			pInst->currOffset = currFrame * frameSizeX;
 			pInst->target = -1;
 			pInst->targetPos = glm::vec3();
+			pInst->enablePhysics = true;
 			pInst->health = -1;
+
+			if (life != 0) {
+				pInst->lifespan = life;
+			}
+
+			if (pInst->type == TYPE_BOX) {
+				pInst->health = 3;
+			}
 
 			sNumGameObj++;
 			return pInst;
@@ -103,78 +114,13 @@ void GameInit() {
 	sNumTex++;
 	sNumSprite++;
 
-	sTexArray[sNumTex].loadFromFile("asset\\bullet.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\missile_2.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\fighter.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\mig.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	//sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 72, 70));
-	sNumTex++;
-	sNumSprite++;
-	
-
-	sTexArray[sNumTex].loadFromFile("asset\\explosion3.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	//sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 64, 52));
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\enemy_bullet.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\enemy_missile_2.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\white_single_smoke.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	//sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 64, 52));
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\chaff_flare.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\boss.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	//sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 72, 70));
-	sNumTex++;
-	sNumSprite++;
-
-	sTexArray[sNumTex].loadFromFile("asset\\chaff_flare.png");
-	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	sNumTex++;
-	sNumSprite++;
-
 	sTexArray[sNumTex].loadFromFile("asset\\object.png");
+	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
+	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
+	sNumTex++;
+	sNumSprite++;
+
+	sTexArray[sNumTex].loadFromFile("asset\\square.png");
 	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
 	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
 	sNumTex++;
@@ -186,10 +132,18 @@ void GameInit() {
 		glm::vec3(0.0f, 0.0f, 0.0f),glm::vec3(window.getSize().x / 2160.0, window.getSize().y / 1215.0, 1.0f),
 		0, false, 0, false, 0, 0, 0);
 
-	for (int i = 0; i < 10; i++) {
+	/*for (int i = 0; i < 10; i++) {
 		int rand_s = rand();
 		gameObjInstCreate(TYPE_OBJECT, glm::vec3(rand() % window.getSize().x, rand() % (window.getSize().y - 300), 0.0f),
 			glm::vec3(50.0 * ((2 * (float)rand() / (float)(RAND_MAX)) - 1), 0.0f, 0.0f),
+			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+	}*/
+
+
+	for (int i = 0; i < 30; i++) {
+		int rand_s = rand();
+		gameObjInstCreate(TYPE_BOX, glm::vec3((window.getSize().x / 3.0) + (125 * (i % 5)), (window.getSize().y / 2.0) + (125 * (i / 5)), 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 	}
 
@@ -212,11 +166,80 @@ void GameUpdate(double dt, long frame, int &state) {
 	// Get user input
 	//-----------------------------------------
 
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
+	static bool isSelected = false;
+	static int objIndex = -1;
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		//isSelected = false;
+		//objIndex = -1;
+		
 		sf::Vector2i position = sf::Mouse::getPosition(window);
-		std::cout << "x: " << position.x << ", y: " << position.y << std::endl;
+
+		GameObj* pInst;
+
+		switch (isSelected) {
+			case true:
+				pInst = sGameObjInstArray + objIndex;
+				pInst->enablePhysics = false;
+				pInst->position = glm::vec3(position.x, position.y, 0);
+
+				if (glm::length(pInst->position - glm::vec3(position.x, position.y, 0)) > 200.0) {
+					pInst->enablePhysics = true;
+					isSelected = false;
+					objIndex = -1;
+				}
+				break;
+
+			case false:
+				if (objIndex == -1) {
+					for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
+						pInst = sGameObjInstArray + i;
+						if (pInst->type == TYPE_OBJECT) {
+							pInst->enablePhysics = true;
+							if (glm::length(pInst->position - glm::vec3(position.x, position.y, 0)) < DEFAULT_RADIUS) {
+								isSelected = true;
+								objIndex = i;
+								break;
+							}
+						}
+					}
+				}
+				break;
+		}
 	}
+	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		GameObj* pInst;
+		sf::Vector2i position = sf::Mouse::getPosition(window);
+		if (objIndex != -1) {
+			pInst = sGameObjInstArray + objIndex;
+			pInst->velocity = (glm::vec3(position.x, position.y, 0.0) - prevMousePos) * (0.005f / (float)dt);
+		}
+
+		objIndex = -1;
+		isSelected = false;
+
+		for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
+			pInst = sGameObjInstArray + i;
+			if (pInst->type == TYPE_OBJECT) {
+				pInst->enablePhysics = true;
+			}
+		}
+	}
+
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && !isMouseDown){
+		isMouseDown = true;
+		sf::Vector2i position = sf::Mouse::getPosition(window);
+		//std::cout << "x: " << position.x << ", y: " << position.y << std::endl;
+
+		int rand_s = rand();
+		gameObjInstCreate(TYPE_OBJECT, glm::vec3(position.x, position.y, 0.0f),
+			glm::vec3(0, 0.0f, 0.0f),
+			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
+	}
+	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+		isMouseDown = false;
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
 
 	}
@@ -235,6 +258,8 @@ void GameUpdate(double dt, long frame, int &state) {
 		view.zoom(1 / 0.99f);
 	}
 
+	sf::Vector2i tempMousePos = sf::Mouse::getPosition(window);
+	prevMousePos = glm::vec3(tempMousePos.x, tempMousePos.y, 0);
 	//-----------------------------------------
 	// Decrease object lifespan
 	//-----------------------------------------
@@ -244,12 +269,23 @@ void GameUpdate(double dt, long frame, int &state) {
 		//++
 		for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
 			GameObj* pInst = sGameObjInstArray + i;
-			if (pInst->lifespan > 0) {
-				pInst->lifespan--;
+			
+			if (pInst->type == TYPE_OBJECT) {
+				if (glm::length(pInst->velocity) < 0.5 && pInst->enablePhysics) {
+					pInst->lifespan--;
+				}
+				else {
+					pInst->lifespan = 60;
+				}
 			}
+			else {
+				if (pInst->lifespan > 0) {
+					pInst->lifespan--;
+				}
 
-			if (pInst->lifespan == 0) {
-				gameObjInstDestroy(*pInst);
+				if (pInst->lifespan == 0) {
+					gameObjInstDestroy(*pInst);
+				}
 			}
 		}
 
@@ -267,17 +303,23 @@ void GameUpdate(double dt, long frame, int &state) {
 			continue;
 
 		if (pInst->type == TYPE_OBJECT) {
-			if (pInst->position.y < window.getSize().y) {
-				pInst->velocity.y = pInst->velocity.y + (DEFAULT_GRAVITY * dt);
-			}
-			else{
-				pInst->position.y = window.getSize().y;
-				pInst->velocity = glm::vec3(pInst->velocity.x, -pInst->velocity.y * 0.5, 0);
+			if (pInst->enablePhysics) {
+				if (pInst->position.y < window.getSize().y) {
+					pInst->velocity.y = pInst->velocity.y + (DEFAULT_GRAVITY * dt);
+				}
+				else {
+					pInst->position.y = window.getSize().y;
+					pInst->velocity = glm::vec3(pInst->velocity.x, -pInst->velocity.y * 0.5, 0);
+
+				}
+
+				if (!(0.0 < pInst->position.x && pInst->position.x < window.getSize().x)) {
+					pInst->velocity = glm::vec3(-pInst->velocity.x * 0.5, pInst->velocity.y, 0);
+				}
 
 			}
-
-			if (!(0.0 < pInst->position.x && pInst->position.x < window.getSize().x)) {
-				pInst->velocity = glm::vec3(-pInst->velocity.x * 0.95, pInst->velocity.y, 0);
+			else {
+				pInst->velocity = glm::vec3(0, 0, 0);
 			}
 
 			pInst->position += pInst->velocity;
@@ -311,8 +353,6 @@ void GameUpdate(double dt, long frame, int &state) {
 
 	//-----------------------------------------
 	// Update some game obj behavior
-	//	- wrap ship around the screen
-	//	- destroy bullet the go out of the screen
 	//-----------------------------------------
 
 	for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
@@ -321,12 +361,6 @@ void GameUpdate(double dt, long frame, int &state) {
 		// skip inactive object
 		if (pInst->flag == FLAG_INACTIVE)
 			continue;
-
-		if ((pInst->type == TYPE_SHIP) || (pInst->type == TYPE_ENEMY) || (pInst->type == TYPE_BOSS)) {
-
-
-		}
-
 	}
 
 	//-----------------------------------------
@@ -352,7 +386,7 @@ void GameUpdate(double dt, long frame, int &state) {
 					continue;
 				}
 
-				if (pInst2->type == TYPE_OBJECT) {
+				/*if (pInst2->type == TYPE_OBJECT) {
 					float distance = glm::length(pInst1->position - pInst2->position);
 					if (distance <= 50.0) {
 						float tempX = pInst1->velocity.x;
@@ -361,12 +395,38 @@ void GameUpdate(double dt, long frame, int &state) {
 						pInst1->velocity.y = -pInst2->velocity.y;
 						pInst2->velocity.x = -tempX * 0.9;
 						pInst2->velocity.y = -tempY;
-					}
-					
-				}
-
+					}*/
+			}
+		
+			if (glm::length(pInst1->velocity) < 0.5 && pInst1->lifespan <= 0) {
+				gameObjInstDestroy(*pInst1);
+			}
 		}
 
+		if (pInst1->type == TYPE_BOX) {
+			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
+				GameObj* pInst2 = sGameObjInstArray + j;
+
+				if (pInst2->type == TYPE_OBJECT) {
+					int collisionType;
+					if (checkCollisionSquareCircle(pInst1->position, pInst2->position, 40, collisionType) && pInst2->enablePhysics) {
+						if (collisionType == COL_TOP || collisionType == COL_BOTTOM) {
+							std::cout << "top" << std::endl;
+							pInst2->velocity.y = -pInst2->velocity.y;
+						}
+						else if (collisionType == COL_SIDE) {
+							std::cout << "side" << std::endl;
+							pInst2->velocity.x = -pInst2->velocity.x;
+						}
+						pInst1->health--;
+
+						if (pInst1->health <= 0) {
+							gameObjInstDestroy(*pInst1);
+						}
+					}
+				}
+			}
+		}
 	}
 
 
@@ -374,7 +434,6 @@ void GameUpdate(double dt, long frame, int &state) {
 	//printf("Level1: Update @> %f fps, frame>%ld\n", fps, frame);
 	//printf("Score> %i\n", sScore);
 	//printf("num obj> %i\n", sNumGameObj);
-	}
 }
 
 
@@ -429,6 +488,70 @@ void GameClean() {
 	std::cout << "game clean" << std::endl;
 	
 
+}
+
+bool checkCollisionSquareCircle(glm::vec3 square, glm::vec3 circle, float halfWidth, int &collisionType) {
+	float diffX = circle.x - square.x;
+	float diffY = circle.y - square.y;
+
+		// Calculate the minimum distance to separate along X and Y
+	float minXDist = DEFAULT_RADIUS + halfWidth;
+	float minYDist = DEFAULT_RADIUS + halfWidth;
+
+		// Calculate the depth of collision for both the X and Y axis
+	float depthX = diffX > 0 ? minXDist - diffX : -minXDist - diffX;
+	float depthY = diffY > 0 ? minYDist - diffY : -minYDist - diffY;
+
+		// Now that you have the depth, you can pick the smaller depth and move
+		// along that axis.
+	if (depthX != 0 && depthY != 0) {
+		if (abs(depthX) < abs(depthY)) {
+			// Collision along the X axis. React accordingly
+			if (depthX > 0) {
+			// Left side collision
+				collisionType = COL_SIDE;
+			}
+			else {
+				// Right side collision
+				collisionType = COL_SIDE;
+			}
+		}
+		else {
+			// Collision along the Y axis.
+			if (depthY > 0) {
+				// Top side collision
+				collisionType = COL_TOP;
+			}
+			else {
+				// Bottom side collision
+				collisionType = COL_BOTTOM;
+			}
+		}
+	}
+	else {
+		collisionType = COL_TOP;
+	}
+
+	float circleDistanceX = abs(circle.x - square.x);
+	float circleDistanceY = abs(circle.y - square.y);
+
+	if (circleDistanceX > (halfWidth + DEFAULT_RADIUS)) {
+		collisionType = COL_NONE;
+		return false;
+	}
+	if (circleDistanceY > (halfWidth + DEFAULT_RADIUS)) {
+		collisionType = COL_NONE;
+		return false;
+	}
+
+	if (circleDistanceX <= halfWidth || circleDistanceY <= halfWidth) {
+		return true;
+	}
+
+	float cornerDistance_sq = pow((circleDistanceX - halfWidth), 2) +
+		pow((circleDistanceY - halfWidth), 2);
+
+	return (cornerDistance_sq <= (pow(DEFAULT_RADIUS, 2)));
 }
 
 float dotAngle(glm::vec3 v1, glm::vec3 v2) {
