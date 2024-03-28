@@ -16,6 +16,7 @@ static GameObj*		sPlayer;										// Pointer to the Player game object instance
 
 static glm::vec3 prevMousePos;
 static bool isMouseDown;
+static int spawnMode;
 
 // View
 sf::View view;
@@ -231,23 +232,29 @@ void GameUpdate(double dt, long frame, int &state) {
 		sf::Vector2i position = sf::Mouse::getPosition(window);
 		//std::cout << "x: " << position.x << ", y: " << position.y << std::endl;
 
-		int rand_s = rand();
-		gameObjInstCreate(TYPE_OBJECT, glm::vec3(position.x, position.y, 0.0f),
-			glm::vec3(0, 0.0f, 0.0f),
-			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
+		switch (spawnMode){
+			case SPAWN_BALL:
+				gameObjInstCreate(TYPE_OBJECT, glm::vec3(position.x, position.y, 0.0f),
+					glm::vec3(0, 0.0f, 0.0f),
+					glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
+				break;
+
+			case SPAWN_BOX:
+				gameObjInstCreate(TYPE_BOX, glm::vec3(position.x, position.y, 0.0f),
+					glm::vec3(0.0f, 0.0f, 0.0f),
+					glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+				break;
+		}
 	}
 	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		isMouseDown = false;
 	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
-
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)){
+		spawnMode = SPAWN_BALL;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-
-	}
-	else {
-
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+		spawnMode = SPAWN_BOX;
 	}
 
 	//zoom-UO
@@ -276,6 +283,12 @@ void GameUpdate(double dt, long frame, int &state) {
 				}
 				else {
 					pInst->lifespan = 60;
+				}
+			}
+			else if (pInst->type == TYPE_BOX) {
+				pInst->lifespan--;
+				if (pInst->lifespan <= 0) {
+					pInst->enablePhysics = true;
 				}
 			}
 			else {
@@ -309,12 +322,21 @@ void GameUpdate(double dt, long frame, int &state) {
 				}
 				else {
 					pInst->position.y = window.getSize().y;
-					pInst->velocity = glm::vec3(pInst->velocity.x, -pInst->velocity.y * 0.5, 0);
 
+					if (pInst->velocity.y > 0.0) {
+						pInst->velocity = glm::vec3(pInst->velocity.x, -glm::abs(pInst->velocity.y) * 0.75, 0);
+					}
+					else if (pInst->velocity.y < 0.0) {
+						pInst->velocity = glm::vec3(pInst->velocity.x, glm::abs(pInst->velocity.y) * 0.75, 0);
+					}
 				}
 
-				if (!(0.0 < pInst->position.x && pInst->position.x < window.getSize().x)) {
-					pInst->velocity = glm::vec3(-pInst->velocity.x * 0.5, pInst->velocity.y, 0);
+				if (pInst->position.x < 0.0) {
+					pInst->velocity = glm::vec3(glm::abs(pInst->velocity.x) * 0.75, pInst->velocity.y, 0);
+				}
+
+				if (pInst->position.x > window.getSize().x) {
+					pInst->velocity = glm::vec3(-glm::abs(pInst->velocity.x) * 0.75, pInst->velocity.y, 0);
 				}
 
 			}
@@ -325,6 +347,21 @@ void GameUpdate(double dt, long frame, int &state) {
 			pInst->position += pInst->velocity;
 		}
 
+		if (pInst->type == TYPE_BOX) {
+			if (pInst->enablePhysics) {
+				if (pInst->position.y < window.getSize().y) {
+					pInst->velocity.y = pInst->velocity.y + (DEFAULT_GRAVITY * dt);
+				}
+				else {
+					pInst->position.y = window.getSize().y;
+				}
+			}
+			else {
+				pInst->velocity = glm::vec3(0, 0, 0);
+			}
+
+			pInst->position += pInst->velocity;
+		}
 	}
 
 	//----------------------------------------------------
@@ -407,21 +444,40 @@ void GameUpdate(double dt, long frame, int &state) {
 			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
 				GameObj* pInst2 = sGameObjInstArray + j;
 
+				if (i == j) {
+					continue;
+				}
+
+				if (pInst2->flag == FLAG_INACTIVE) {
+					continue;
+				}
+
 				if (pInst2->type == TYPE_OBJECT) {
 					int collisionType;
 					if (checkCollisionSquareCircle(pInst1->position, pInst2->position, 40, collisionType) && pInst2->enablePhysics) {
 						if (collisionType == COL_TOP || collisionType == COL_BOTTOM) {
-							std::cout << "top" << std::endl;
+							//std::cout << "top" << std::endl;
 							pInst2->velocity.y = -pInst2->velocity.y;
 						}
 						else if (collisionType == COL_SIDE) {
-							std::cout << "side" << std::endl;
+							//std::cout << "side" << std::endl;
 							pInst2->velocity.x = -pInst2->velocity.x;
 						}
 						pInst1->health--;
 
 						if (pInst1->health <= 0) {
 							gameObjInstDestroy(*pInst1);
+						}
+					}
+				}
+
+				if (pInst2->type == TYPE_BOX) {
+					int collisionType;
+					if (checkCollisionSquareSquare(pInst1->position, pInst2->position, 60, collisionType)) {
+						//std::cout << "collided" << std::endl;
+						if (collisionType == COL_BOTTOM) {
+							pInst1->enablePhysics = false;
+							pInst1->lifespan = 3;
 						}
 					}
 				}
@@ -552,6 +608,33 @@ bool checkCollisionSquareCircle(glm::vec3 square, glm::vec3 circle, float halfWi
 		pow((circleDistanceY - halfWidth), 2);
 
 	return (cornerDistance_sq <= (pow(DEFAULT_RADIUS, 2)));
+}
+
+bool checkCollisionSquareSquare(glm::vec3 s1, glm::vec3 s2, float halfWidth, int& collisionType) {
+	if (s1.x - halfWidth > s2.x + halfWidth) {
+		return false;
+	}
+
+	if (s2.x - halfWidth > s1.x + halfWidth) {
+		return false;
+	}
+
+	if (s1.y + halfWidth < s2.y - halfWidth) {
+		return false;
+	}
+
+	if (s2.y + halfWidth < s1.y - halfWidth) {
+		return false;
+	}
+
+	if (s1.y < s2.y) {
+		collisionType = COL_BOTTOM;
+	}
+	else {
+		collisionType = COL_TOP;
+	}
+
+	return true;
 }
 
 float dotAngle(glm::vec3 v1, glm::vec3 v2) {

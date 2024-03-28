@@ -40,6 +40,11 @@ enum COLLSION_SIDE {
 	COL_NONE
 };
 
+enum SPAWN_MODE {
+	SPAWN_BALL,
+	SPAWN_BOX
+};
+
 #define FLAG_INACTIVE		0
 #define FLAG_ACTIVE			1
 
@@ -79,6 +84,7 @@ static GameObj* gameObjInstCreate(int type, glm::vec3 pos, glm::vec3 vel, glm::v
 static void		gameObjInstDestroy(GameObj& pInst);
 
 bool checkCollisionSquareCircle(glm::vec3 square, glm::vec3 circle, float halfWidth, int &collisionType);
+bool checkCollisionSquareSquare(glm::vec3 s1, glm::vec3 s2, float halfWidth, int &collisionType);
 float dotAngle(glm::vec3 v1, glm::vec3 v2);
 
 void GameInit();
