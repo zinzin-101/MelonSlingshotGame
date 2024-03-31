@@ -16,6 +16,7 @@ static GameObj*		sPlayer;										// Pointer to the Player game object instance
 
 static glm::vec3 prevMousePos;
 static bool isMouseDown;
+static bool isLeftClickDown;
 static int spawnMode;
 
 // View
@@ -52,6 +53,7 @@ GameObj* gameObjInstCreate(int type, glm::vec3 pos, glm::vec3 vel, glm::vec3 sca
 			pInst->targetPos = glm::vec3();
 			pInst->enablePhysics = true;
 			pInst->health = -1;
+			pInst->onSling = false;
 
 			if (life != 0) {
 				pInst->lifespan = life;
@@ -115,13 +117,26 @@ void GameInit() {
 	sNumTex++;
 	sNumSprite++;
 
-	sTexArray[sNumTex].loadFromFile("asset\\object.png");
+	sTexArray[sNumTex].loadFromFile("asset\\cactus.png");
 	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
 	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
 	sNumTex++;
 	sNumSprite++;
 
-	sTexArray[sNumTex].loadFromFile("asset\\square.png");
+	sTexArray[sNumTex].loadFromFile("asset\\barrel.png");
+	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
+	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
+	//sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 267, 344));
+	sNumTex++;
+	sNumSprite++;
+
+	sTexArray[sNumTex].loadFromFile("asset\\slingshot.png");
+	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
+	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
+	sNumTex++;
+	sNumSprite++;
+
+	sTexArray[sNumTex].loadFromFile("asset\\enemy.png");
 	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
 	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
 	sNumTex++;
@@ -145,7 +160,7 @@ void GameInit() {
 		int rand_s = rand();
 		gameObjInstCreate(TYPE_BOX, glm::vec3((window.getSize().x / 3.0) + (125 * (i % 5)), (window.getSize().y / 2.0) + (125 * (i / 5)), 0.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+			glm::vec3(450.0f / 1000, 450.0f / 1000, 1.0f), 0.0f, false, 0, true, 3, 0, 267);
 	}
 
 
@@ -171,6 +186,7 @@ void GameUpdate(double dt, long frame, int &state) {
 	static int objIndex = -1;
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		isLeftClickDown = true;
 		//isSelected = false;
 		//objIndex = -1;
 		
@@ -209,6 +225,8 @@ void GameUpdate(double dt, long frame, int &state) {
 		}
 	}
 	else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+		isLeftClickDown = false;
+
 		GameObj* pInst;
 		sf::Vector2i position = sf::Mouse::getPosition(window);
 		if (objIndex != -1) {
@@ -236,13 +254,32 @@ void GameUpdate(double dt, long frame, int &state) {
 			case SPAWN_BALL:
 				gameObjInstCreate(TYPE_OBJECT, glm::vec3(position.x, position.y, 0.0f),
 					glm::vec3(0, 0.0f, 0.0f),
-					glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
+					glm::vec3(300.0f / 1000, 300.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
 				break;
 
 			case SPAWN_BOX:
 				gameObjInstCreate(TYPE_BOX, glm::vec3(position.x, position.y, 0.0f),
 					glm::vec3(0.0f, 0.0f, 0.0f),
-					glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+					glm::vec3(450.0f / 1000, 450.0f / 1000, 1.0f), 0.0f, false, 0, true, 3, 0, 267);
+				break;
+
+			case SPAWN_SLING:
+
+				for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
+					if (sGameObjInstArray[i].flag == FLAG_ACTIVE && sGameObjInstArray[i].type == TYPE_SLING) {
+						gameObjInstDestroy(sGameObjInstArray[i]);
+					}
+				}
+
+				gameObjInstCreate(TYPE_SLING, glm::vec3(position.x, position.y, 0.0f),
+					glm::vec3(0.0f, 0.0f, 0.0f),
+					glm::vec3(450.0f / 1000, 450.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+				break;
+
+			case SPAWN_ENEMY:
+				gameObjInstCreate(TYPE_ENEMY, glm::vec3(position.x, position.y, 0.0f),
+					glm::vec3(0.0f, 0.0f, 0.0f),
+					glm::vec3(250.0f / 1000, 250.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 				break;
 		}
 	}
@@ -255,6 +292,12 @@ void GameUpdate(double dt, long frame, int &state) {
 	}
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
 		spawnMode = SPAWN_BOX;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+		spawnMode = SPAWN_SLING;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
+		spawnMode = SPAWN_ENEMY;
 	}
 
 	//zoom-UO
@@ -341,7 +384,9 @@ void GameUpdate(double dt, long frame, int &state) {
 
 			}
 			else {
-				pInst->velocity = glm::vec3(0, 0, 0);
+				if (!pInst->onSling) {
+					pInst->velocity = glm::vec3(0, 0, 0);
+				}
 			}
 
 			pInst->position += pInst->velocity;
@@ -374,15 +419,32 @@ void GameUpdate(double dt, long frame, int &state) {
 		for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
 			GameObj* pInst = sGameObjInstArray + i;
 
-			if (!pInst->anim) {
+			if (pInst->flag == FLAG_INACTIVE) {
 				continue;
 			}
 
-			if (pInst->currFrame <= pInst->numFrame) {
-				pInst->currOffset += pInst->frameSizeX;
+			if (pInst->type == TYPE_BOX) {
+				/*if (pInst->health == 3) {
+					pInst->currOffset = 0;
+				}
+				else if (pInst->health == 2) {
+					pInst->currOffset = pInst->frameSizeX;
+				}
+				else if (pInst->health == 1) {
+					pInst->currOffset = pInst->frameSizeX * 2;
+				}*/
 			}
 			else {
-				pInst->currOffset = 0;
+				if (!pInst->anim) {
+					continue;
+				}
+
+				if (pInst->currFrame <= pInst->numFrame) {
+					pInst->currOffset += pInst->frameSizeX;
+				}
+				else {
+					pInst->currOffset = 0;
+				}
 			}
 		}
 
@@ -458,7 +520,7 @@ void GameUpdate(double dt, long frame, int &state) {
 						if (collisionType == COL_TOP || collisionType == COL_BOTTOM) {
 							//std::cout << "top" << std::endl;
 							pInst2->velocity.y = -pInst2->velocity.y;
-						}
+						} 
 						else if (collisionType == COL_SIDE) {
 							//std::cout << "side" << std::endl;
 							pInst2->velocity.x = -pInst2->velocity.x;
@@ -479,6 +541,57 @@ void GameUpdate(double dt, long frame, int &state) {
 							pInst1->enablePhysics = false;
 							pInst1->lifespan = 3;
 						}
+					}
+				}
+			}
+		}
+
+		if (pInst1->type == TYPE_SLING) {
+			float distance;
+			bool canSling = false;
+			int slingIndex;
+			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
+				GameObj* pInst2 = sGameObjInstArray + j;
+
+				if (pInst2->type != TYPE_OBJECT || pInst2->flag == FLAG_INACTIVE) {
+					continue;
+				}
+
+				distance = glm::length(pInst1->position - pInst2->position);
+
+				if (distance <= 500.0f && j == objIndex && objIndex != -1) {
+					canSling = true;
+					slingIndex = objIndex;
+					break;
+				}
+			}
+
+			if (canSling) {
+				float power = distance / 500.0f;
+				GameObj* slingObj = sGameObjInstArray + slingIndex;
+				slingObj->onSling = true;
+				glm::vec3 dir = pInst1->position - slingObj->position;
+				slingObj->velocity = glm::normalize(dir) * power;
+			}
+		}
+
+		if (pInst1->type == TYPE_ENEMY) {
+			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
+				GameObj* pInst2 = sGameObjInstArray + j;
+
+				if (i == j) {
+					continue;
+				}
+
+				if (pInst2->flag == FLAG_INACTIVE) {
+					continue;
+				}
+
+				if (pInst2->type == TYPE_OBJECT) {
+					float distance = glm::length(pInst1->position - pInst2->position);
+					if (distance <= DEFAULT_RADIUS) {
+						gameObjInstDestroy(*pInst1);
+						pInst2->velocity = -pInst2->velocity;
 					}
 				}
 			}

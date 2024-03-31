@@ -23,6 +23,7 @@ extern sf::RenderWindow window;
 #define PLAYER_INITIAL_NUM			20				// initial number of ship lives
 #define DEFAULT_GRAVITY				9.81
 #define DEFAULT_RADIUS				50.0f
+#define SLINGSHOT_POW				10.0f
 
 
 enum GAMEOBJ_TYPE
@@ -30,7 +31,9 @@ enum GAMEOBJ_TYPE
 	// list of game object types
 	TYPE_BACKGROUND = 0,
 	TYPE_OBJECT,
-	TYPE_BOX
+	TYPE_BOX,
+	TYPE_SLING,
+	TYPE_ENEMY
 };
 
 enum COLLSION_SIDE {
@@ -42,7 +45,9 @@ enum COLLSION_SIDE {
 
 enum SPAWN_MODE {
 	SPAWN_BALL,
-	SPAWN_BOX
+	SPAWN_BOX,
+	SPAWN_SLING,
+	SPAWN_ENEMY
 };
 
 #define FLAG_INACTIVE		0
@@ -74,6 +79,8 @@ struct GameObj
 	bool			enablePhysics;
 
 	int				health;
+
+	bool			onSling;
 };
 
 
