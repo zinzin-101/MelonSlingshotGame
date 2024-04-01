@@ -53,7 +53,7 @@ GameObj* gameObjInstCreate(int type, glm::vec3 pos, glm::vec3 vel, glm::vec3 sca
 			pInst->targetPos = glm::vec3();
 			pInst->enablePhysics = true;
 			pInst->health = -1;
-			pInst->onSling = false;
+			pInst->nextVel = glm::vec3(0,0,0);
 
 			if (life != 0) {
 				pInst->lifespan = life;
@@ -177,7 +177,6 @@ void GameInit() {
 
 
 void GameUpdate(double dt, long frame, int &state) {
-
 	//-----------------------------------------
 	// Get user input
 	//-----------------------------------------
@@ -194,6 +193,9 @@ void GameUpdate(double dt, long frame, int &state) {
 
 		GameObj* pInst;
 
+		int slingIndex = -1;
+
+
 		switch (isSelected) {
 			case true:
 				pInst = sGameObjInstArray + objIndex;
@@ -205,6 +207,29 @@ void GameUpdate(double dt, long frame, int &state) {
 					isSelected = false;
 					objIndex = -1;
 				}
+
+				float distance;
+				for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
+					GameObj *pInst2 = sGameObjInstArray + i;
+
+					if (pInst2->type != TYPE_SLING || pInst2->flag == FLAG_INACTIVE) {
+						continue;
+					}
+
+					distance = glm::length(pInst2->position - pInst->position);
+					std::cout << distance << std::endl;
+					if (distance <= SLINGSHOT_RADIUS) {
+						slingIndex = i;
+						break;
+					}
+				}
+
+				if (slingIndex != -1) {
+					float power = distance / SLINGSHOT_RADIUS;
+					glm::vec3 dir = sGameObjInstArray[slingIndex].position - pInst->position;
+					pInst->nextVel = glm::normalize(dir) * power * SLINGSHOT_POW;
+				}
+
 				break;
 
 			case false:
@@ -230,8 +255,15 @@ void GameUpdate(double dt, long frame, int &state) {
 		GameObj* pInst;
 		sf::Vector2i position = sf::Mouse::getPosition(window);
 		if (objIndex != -1) {
+			//std::cout << "release mouse" << std::endl;
 			pInst = sGameObjInstArray + objIndex;
-			pInst->velocity = (glm::vec3(position.x, position.y, 0.0) - prevMousePos) * (0.005f / (float)dt);
+			if (pInst->nextVel != glm::vec3(0, 0, 0)) {
+				pInst->velocity = pInst->nextVel;
+				pInst->nextVel = glm::vec3(0, 0, 0);
+			}
+			else {
+				pInst->velocity = (glm::vec3(position.x, position.y, 0.0) - prevMousePos) * (0.005f / (float)dt);
+			}
 		}
 
 		objIndex = -1;
@@ -384,9 +416,7 @@ void GameUpdate(double dt, long frame, int &state) {
 
 			}
 			else {
-				if (!pInst->onSling) {
-					pInst->velocity = glm::vec3(0, 0, 0);
-				}
+				pInst->velocity = glm::vec3(0, 0, 0);
 			}
 
 			pInst->position += pInst->velocity;
@@ -521,7 +551,7 @@ void GameUpdate(double dt, long frame, int &state) {
 							//std::cout << "top" << std::endl;
 							pInst2->velocity.y = -pInst2->velocity.y;
 						} 
-						else if (collisionType == COL_SIDE) {
+						else if (collisionType == COL_SIDE) {// add speed reduction according to initial speed
 							//std::cout << "side" << std::endl;
 							pInst2->velocity.x = -pInst2->velocity.x;
 						}
@@ -546,34 +576,34 @@ void GameUpdate(double dt, long frame, int &state) {
 			}
 		}
 
-		if (pInst1->type == TYPE_SLING) {
-			float distance;
-			bool canSling = false;
-			int slingIndex;
-			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
-				GameObj* pInst2 = sGameObjInstArray + j;
+		//if (pInst1->type == TYPE_SLING) {
+		//	float distance;
+		//	bool canSling = false;
+		//	int slingIndex;
+		//	for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
+		//		GameObj* pInst2 = sGameObjInstArray + j;
 
-				if (pInst2->type != TYPE_OBJECT || pInst2->flag == FLAG_INACTIVE) {
-					continue;
-				}
+		//		if (pInst2->type != TYPE_OBJECT || pInst2->flag == FLAG_INACTIVE) {
+		//			continue;
+		//		}
 
-				distance = glm::length(pInst1->position - pInst2->position);
+		//		distance = glm::length(pInst1->position - pInst2->position);
 
-				if (distance <= 500.0f && j == objIndex && objIndex != -1) {
-					canSling = true;
-					slingIndex = objIndex;
-					break;
-				}
-			}
+		//		if (distance <= 500.0f && j == objIndex && objIndex != -1) {
+		//			canSling = true;
+		//			slingIndex = objIndex;
+		//			break;
+		//		}
+		//	}
 
-			if (canSling) {
-				float power = distance / 500.0f;
-				GameObj* slingObj = sGameObjInstArray + slingIndex;
-				slingObj->onSling = true;
-				glm::vec3 dir = pInst1->position - slingObj->position;
-				slingObj->velocity = glm::normalize(dir) * power;
-			}
-		}
+		//	if (canSling) {
+		//		float power = distance / 500.0f;
+		//		GameObj* slingObj = sGameObjInstArray + slingIndex;
+		//		slingObj->onSling = true;
+		//		glm::vec3 dir = pInst1->position - slingObj->position;
+		//		slingObj->velocity = glm::normalize(dir) * power;
+		//	}
+		//}
 
 		if (pInst1->type == TYPE_ENEMY) {
 			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {

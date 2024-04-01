@@ -23,7 +23,8 @@ extern sf::RenderWindow window;
 #define PLAYER_INITIAL_NUM			20				// initial number of ship lives
 #define DEFAULT_GRAVITY				9.81
 #define DEFAULT_RADIUS				50.0f
-#define SLINGSHOT_POW				10.0f
+#define SLINGSHOT_POW				50.0f
+#define SLINGSHOT_RADIUS			200.0f
 
 
 enum GAMEOBJ_TYPE
@@ -80,7 +81,7 @@ struct GameObj
 
 	int				health;
 
-	bool			onSling;
+	glm::vec3		nextVel;
 };
 
 
