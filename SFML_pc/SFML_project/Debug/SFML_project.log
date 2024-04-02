@@ -1,102 +1,102 @@
 ﻿  game.cpp
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(89,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,104): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,104): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,104): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,104): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,68): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,68): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,68): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(116,68): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,104): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,104): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,104): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,104): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,68): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,68): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,68): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(122,68): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,104): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,104): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,104): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,104): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,68): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,68): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,68): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(128,68): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,104): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,104): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,104): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,104): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,68): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,68): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,68): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(135,68): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,104): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,104): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,104): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,104): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,68): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,68): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,68): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(141,68): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:         and
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:             T=float
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,64): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:         and
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:             T=float
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(169,44): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(170,62): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(170,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(396,44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(396,44): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(396,44): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(396,44): warning C4244:             T=float
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(396,44): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:         and
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:             T=float
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(399,42): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(428,44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(428,44): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(428,44): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(428,44): warning C4244:             T=float
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(428,44): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:         with
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:             T=unsigned int
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:         and
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:         [
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:             T=float
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(431,42): warning C4244:         ]
-E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(750,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(106,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,104): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,104): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,104): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,104): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,68): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,68): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,68): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(133,68): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,104): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,104): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,104): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,104): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,68): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,68): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,68): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(139,68): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,104): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,104): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,104): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,104): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,68): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,68): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,68): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(152,68): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,104): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,104): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,104): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,104): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,104): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,68): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,68): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,68): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,68): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(158,68): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:         and
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,64): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:         and
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(216,44): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(217,62): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(217,36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(472,44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(472,44): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(472,44): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(472,44): warning C4244:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(472,44): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:         and
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(475,45): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(488,30): warning C4305: '*=': truncation from 'double' to 'T'
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(488,30): warning C4305:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(488,30): warning C4305:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(488,30): warning C4305:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(488,30): warning C4305:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(512,44): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(512,44): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(512,44): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(512,44): warning C4244:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(512,44): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244: '=': conversion from 'T' to 'T', possible loss of data
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:             T=unsigned int
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:         and
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(515,45): warning C4244:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(708,33): warning C4305: '*=': truncation from 'double' to 'T'
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(708,33): warning C4305:         with
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(708,33): warning C4305:         [
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(708,33): warning C4305:             T=float
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(708,33): warning C4305:         ]
+E:\CodingProject\pi-game\SFML_pc\SFML_project\game.cpp(834,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   SFML_project.vcxproj -> E:\CodingProject\pi-game\SFML_pc\Debug\SFML_project.exe

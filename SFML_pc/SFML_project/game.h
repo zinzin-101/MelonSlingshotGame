@@ -22,8 +22,8 @@ extern sf::RenderWindow window;
 #define GAME_OBJ_INST_MAX			1024			// The total number of different game object instances
 #define PLAYER_INITIAL_NUM			20				// initial number of ship lives
 #define DEFAULT_GRAVITY				9.81
-#define DEFAULT_RADIUS				50.0f
-#define SLINGSHOT_POW				50.0f
+#define DEFAULT_RADIUS				25.0f
+#define SLINGSHOT_POW				25.0f
 #define SLINGSHOT_RADIUS			200.0f
 
 

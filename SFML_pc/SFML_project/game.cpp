@@ -19,6 +19,23 @@ static bool isMouseDown;
 static bool isLeftClickDown;
 static int spawnMode;
 
+// Sound
+static sf::Music	bgm;
+
+static sf::SoundBuffer bounceFX;
+static sf::SoundBuffer crackFX;
+static sf::SoundBuffer crackFX2;
+static sf::SoundBuffer deadFX;
+static sf::SoundBuffer deadFX2;
+static sf::SoundBuffer releaseFX;
+static sf::Sound _bounceFX;
+static sf::Sound _crackFX;
+static sf::Sound _crackFX2;
+static sf::Sound _deadFX;
+static sf::Sound _deadFX2;
+static sf::Sound _releaseFX;
+
+
 // View
 sf::View view;
 
@@ -123,10 +140,10 @@ void GameInit() {
 	sNumTex++;
 	sNumSprite++;
 
-	sTexArray[sNumTex].loadFromFile("asset\\barrel.png");
+	sTexArray[sNumTex].loadFromFile("asset\\barrel_m.png");
 	sSpriteArray[sNumSprite].setTexture(sTexArray[sNumTex]);
-	sSpriteArray[sNumSprite].setOrigin(sTexArray[sNumTex].getSize().x / 2, sTexArray[sNumTex].getSize().y / 2);
-	//sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 267, 344));
+	sSpriteArray[sNumSprite].setOrigin(133, 172);
+	sSpriteArray[sNumSprite].setTextureRect(sf::IntRect(0, 0, 267, 344));
 	sNumTex++;
 	sNumSprite++;
 
@@ -142,6 +159,28 @@ void GameInit() {
 	sNumTex++;
 	sNumSprite++;
 
+	// music and audio file
+	bgm.openFromFile("asset\\bgm.wav");
+
+	bgm.setVolume(50);
+	bgm.setLoop(true);
+	bgm.stop();
+
+	bounceFX.loadFromFile("asset\\jump2.wav");
+	crackFX.loadFromFile("asset\\plat_break_2.wav");
+	crackFX2.loadFromFile("asset\\plat_break.wav");
+	deadFX.loadFromFile("asset\\enemy_crash_ouch_2.wav");
+	deadFX2.loadFromFile("asset\\enemy_crash_ouch_1.wav");
+	releaseFX.loadFromFile("asset\\release.wav");
+
+	_bounceFX.setBuffer(bounceFX);
+	_crackFX.setBuffer(crackFX);
+	_crackFX2.setBuffer(crackFX2);
+	_deadFX.setBuffer(deadFX);
+	_deadFX2.setBuffer(deadFX2);
+	_releaseFX.setBuffer(releaseFX);
+
+
 	// Create the background instance
 	//	- Creation order is important when rendering, so we should create the background first
 	gameObjInstCreate(TYPE_BACKGROUND, glm::vec3(window.getSize().x/2, window.getSize().y/2, 0.0f), 
@@ -155,12 +194,20 @@ void GameInit() {
 			glm::vec3(100.0f / 1000, 100.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 	}*/
 
+	gameObjInstCreate(TYPE_SLING, glm::vec3(window.getSize().x * 0.15, window.getSize().y * 0.75, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(225.0f / 1000, 225.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 
-	for (int i = 0; i < 30; i++) {
-		int rand_s = rand();
-		gameObjInstCreate(TYPE_BOX, glm::vec3((window.getSize().x / 3.0) + (125 * (i % 5)), (window.getSize().y / 2.0) + (125 * (i / 5)), 0.0f),
+	for (int i = 30; i >= 0; i--) {
+		gameObjInstCreate(TYPE_BOX, glm::vec3((window.getSize().x / 2.0) + (125 * (i % 5)), (window.getSize().y / 3.0) + (150 * (i / 5)), 0.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(450.0f / 1000, 450.0f / 1000, 1.0f), 0.0f, false, 0, true, 3, 0, 267);
+			glm::vec3(225.0f / 1000, 225.0f / 1000, 1.0f), 0.0f, false, 0, true, 3, 0, 267);
+	}
+
+	for (int i = 0; i < 4; i++) {
+		gameObjInstCreate(TYPE_ENEMY, glm::vec3((window.getSize().x / 2.0) + 60 + (125 * (i % 4)), (window.getSize().y * 0.75) + (150 * (i / 5)), 0.0f),
+			glm::vec3(0.0f, 0.0f, 0.0f),
+			glm::vec3(125.0f / 1000, 125.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 	}
 
 
@@ -172,6 +219,8 @@ void GameInit() {
 	view.setRotation(0.0f);
 
 	std::cout << "game init" << std::endl;
+
+	bgm.play();
 }
 
 
@@ -217,7 +266,8 @@ void GameUpdate(double dt, long frame, int &state) {
 					}
 
 					distance = glm::length(pInst2->position - pInst->position);
-					std::cout << distance << std::endl;
+
+					//std::cout << distance << std::endl;
 					if (distance <= SLINGSHOT_RADIUS) {
 						slingIndex = i;
 						break;
@@ -257,7 +307,33 @@ void GameUpdate(double dt, long frame, int &state) {
 		if (objIndex != -1) {
 			//std::cout << "release mouse" << std::endl;
 			pInst = sGameObjInstArray + objIndex;
-			if (pInst->nextVel != glm::vec3(0, 0, 0)) {
+
+			GameObj* slingObj = nullptr;
+
+			for (int i = 0; i < GAME_OBJ_INST_MAX; i++) {
+				if (sGameObjInstArray[i].flag == FLAG_INACTIVE) {
+					continue;
+				}
+
+				if (sGameObjInstArray[i].type == TYPE_SLING) {
+					slingObj = sGameObjInstArray + i;
+					break;
+				}
+			}
+			
+			bool canSling = false;
+
+			if (slingObj != nullptr) {
+				float distance = glm::length(pInst->position - slingObj->position);
+
+				if (distance <= SLINGSHOT_RADIUS) {
+					canSling = true;
+				}
+			}
+
+
+			if (pInst->nextVel != glm::vec3(0, 0, 0) && canSling) {
+				_releaseFX.play();
 				pInst->velocity = pInst->nextVel;
 				pInst->nextVel = glm::vec3(0, 0, 0);
 			}
@@ -286,13 +362,13 @@ void GameUpdate(double dt, long frame, int &state) {
 			case SPAWN_BALL:
 				gameObjInstCreate(TYPE_OBJECT, glm::vec3(position.x, position.y, 0.0f),
 					glm::vec3(0, 0.0f, 0.0f),
-					glm::vec3(300.0f / 1000, 300.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
+					glm::vec3(150.0f / 1000, 150.0f / 1000, 1.0f), 0.0f, false, 60, false, 0, 0, 0);
 				break;
 
 			case SPAWN_BOX:
 				gameObjInstCreate(TYPE_BOX, glm::vec3(position.x, position.y, 0.0f),
 					glm::vec3(0.0f, 0.0f, 0.0f),
-					glm::vec3(450.0f / 1000, 450.0f / 1000, 1.0f), 0.0f, false, 0, true, 3, 0, 267);
+					glm::vec3(225.0f / 1000, 225.0f / 1000, 1.0f), 0.0f, false, 0, true, 3, 0, 267);
 				break;
 
 			case SPAWN_SLING:
@@ -305,13 +381,13 @@ void GameUpdate(double dt, long frame, int &state) {
 
 				gameObjInstCreate(TYPE_SLING, glm::vec3(position.x, position.y, 0.0f),
 					glm::vec3(0.0f, 0.0f, 0.0f),
-					glm::vec3(450.0f / 1000, 450.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+					glm::vec3(225.0f / 1000, 225.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 				break;
 
 			case SPAWN_ENEMY:
 				gameObjInstCreate(TYPE_ENEMY, glm::vec3(position.x, position.y, 0.0f),
 					glm::vec3(0.0f, 0.0f, 0.0f),
-					glm::vec3(250.0f / 1000, 250.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
+					glm::vec3(125.0f / 1000, 125.0f / 1000, 1.0f), 0.0f, false, 0, false, 0, 0, 0);
 				break;
 		}
 	}
@@ -392,26 +468,34 @@ void GameUpdate(double dt, long frame, int &state) {
 
 		if (pInst->type == TYPE_OBJECT) {
 			if (pInst->enablePhysics) {
-				if (pInst->position.y < window.getSize().y) {
+				if (pInst->position.y < window.getSize().y - 30) {
 					pInst->velocity.y = pInst->velocity.y + (DEFAULT_GRAVITY * dt);
 				}
 				else {
-					pInst->position.y = window.getSize().y;
+					pInst->position.y = window.getSize().y - 30;
+
+					if (glm::length(pInst->velocity) > 2.0) {
+						_bounceFX.play();
+					}
 
 					if (pInst->velocity.y > 0.0) {
-						pInst->velocity = glm::vec3(pInst->velocity.x, -glm::abs(pInst->velocity.y) * 0.75, 0);
+						pInst->velocity = glm::vec3(pInst->velocity.x, -glm::abs(pInst->velocity.y) * 0.5, 0);
 					}
 					else if (pInst->velocity.y < 0.0) {
-						pInst->velocity = glm::vec3(pInst->velocity.x, glm::abs(pInst->velocity.y) * 0.75, 0);
+						pInst->velocity = glm::vec3(pInst->velocity.x, glm::abs(pInst->velocity.y) * 0.5, 0);
 					}
+
+					pInst->velocity.x *= 0.9;
 				}
 
 				if (pInst->position.x < 0.0) {
-					pInst->velocity = glm::vec3(glm::abs(pInst->velocity.x) * 0.75, pInst->velocity.y, 0);
+					//pInst->velocity = glm::vec3(glm::abs(pInst->velocity.x) * 0.5, pInst->velocity.y, 0);
+					gameObjInstDestroy(*pInst);
 				}
 
 				if (pInst->position.x > window.getSize().x) {
-					pInst->velocity = glm::vec3(-glm::abs(pInst->velocity.x) * 0.75, pInst->velocity.y, 0);
+					//pInst->velocity = glm::vec3(-glm::abs(pInst->velocity.x) * 0.5, pInst->velocity.y, 0);
+					gameObjInstDestroy(*pInst);
 				}
 
 			}
@@ -424,11 +508,11 @@ void GameUpdate(double dt, long frame, int &state) {
 
 		if (pInst->type == TYPE_BOX) {
 			if (pInst->enablePhysics) {
-				if (pInst->position.y < window.getSize().y) {
+				if (pInst->position.y < window.getSize().y - 50) {
 					pInst->velocity.y = pInst->velocity.y + (DEFAULT_GRAVITY * dt);
 				}
 				else {
-					pInst->position.y = window.getSize().y;
+					pInst->position.y = window.getSize().y - 50;
 				}
 			}
 			else {
@@ -454,7 +538,7 @@ void GameUpdate(double dt, long frame, int &state) {
 			}
 
 			if (pInst->type == TYPE_BOX) {
-				/*if (pInst->health == 3) {
+				if (pInst->health == 3) {
 					pInst->currOffset = 0;
 				}
 				else if (pInst->health == 2) {
@@ -462,7 +546,7 @@ void GameUpdate(double dt, long frame, int &state) {
 				}
 				else if (pInst->health == 1) {
 					pInst->currOffset = pInst->frameSizeX * 2;
-				}*/
+				}
 			}
 			else {
 				if (!pInst->anim) {
@@ -546,16 +630,31 @@ void GameUpdate(double dt, long frame, int &state) {
 
 				if (pInst2->type == TYPE_OBJECT) {
 					int collisionType;
-					if (checkCollisionSquareCircle(pInst1->position, pInst2->position, 40, collisionType) && pInst2->enablePhysics) {
+					if (checkCollisionSquareCircle(pInst1->position, pInst2->position, 20, collisionType) && pInst2->enablePhysics) {
+
+						_bounceFX.play();
+
+						float initVelocity = glm::length(pInst2->velocity);
+
 						if (collisionType == COL_TOP || collisionType == COL_BOTTOM) {
 							//std::cout << "top" << std::endl;
 							pInst2->velocity.y = -pInst2->velocity.y;
+							pInst2->velocity.x *= 0.75;
 						} 
 						else if (collisionType == COL_SIDE) {// add speed reduction according to initial speed
 							//std::cout << "side" << std::endl;
 							pInst2->velocity.x = -pInst2->velocity.x;
+							pInst2->velocity.y *= 0.75;
 						}
-						pInst1->health--;
+						
+						if (initVelocity >= 15.0f) {
+							_crackFX2.play();
+							pInst1->health -= 2;
+						}
+						else {
+							_crackFX.play();
+							pInst1->health--;
+						}
 
 						if (pInst1->health <= 0) {
 							gameObjInstDestroy(*pInst1);
@@ -565,7 +664,7 @@ void GameUpdate(double dt, long frame, int &state) {
 
 				if (pInst2->type == TYPE_BOX) {
 					int collisionType;
-					if (checkCollisionSquareSquare(pInst1->position, pInst2->position, 60, collisionType)) {
+					if (checkCollisionSquareSquare(pInst1->position, pInst2->position, 30, collisionType)) {
 						//std::cout << "collided" << std::endl;
 						if (collisionType == COL_BOTTOM) {
 							pInst1->enablePhysics = false;
@@ -573,37 +672,19 @@ void GameUpdate(double dt, long frame, int &state) {
 						}
 					}
 				}
+
+				if (pInst2->type == TYPE_ENEMY) {
+					int collisionType;
+					if (checkCollisionSquareCircle(pInst1->position, pInst2->position, 20, collisionType) && pInst2->enablePhysics) {
+						if (collisionType == COL_TOP) {
+							gameObjInstDestroy(*pInst2);
+							_deadFX2.play();
+							pInst1->velocity = glm::vec3(0, 0, 0);
+						}
+					}
+				}
 			}
 		}
-
-		//if (pInst1->type == TYPE_SLING) {
-		//	float distance;
-		//	bool canSling = false;
-		//	int slingIndex;
-		//	for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
-		//		GameObj* pInst2 = sGameObjInstArray + j;
-
-		//		if (pInst2->type != TYPE_OBJECT || pInst2->flag == FLAG_INACTIVE) {
-		//			continue;
-		//		}
-
-		//		distance = glm::length(pInst1->position - pInst2->position);
-
-		//		if (distance <= 500.0f && j == objIndex && objIndex != -1) {
-		//			canSling = true;
-		//			slingIndex = objIndex;
-		//			break;
-		//		}
-		//	}
-
-		//	if (canSling) {
-		//		float power = distance / 500.0f;
-		//		GameObj* slingObj = sGameObjInstArray + slingIndex;
-		//		slingObj->onSling = true;
-		//		glm::vec3 dir = pInst1->position - slingObj->position;
-		//		slingObj->velocity = glm::normalize(dir) * power;
-		//	}
-		//}
 
 		if (pInst1->type == TYPE_ENEMY) {
 			for (int j = 0; j < GAME_OBJ_INST_MAX; j++) {
@@ -619,9 +700,12 @@ void GameUpdate(double dt, long frame, int &state) {
 
 				if (pInst2->type == TYPE_OBJECT) {
 					float distance = glm::length(pInst1->position - pInst2->position);
-					if (distance <= DEFAULT_RADIUS) {
+					if (distance <= DEFAULT_RADIUS && pInst2->enablePhysics) {
 						gameObjInstDestroy(*pInst1);
-						pInst2->velocity = -pInst2->velocity;
+						_deadFX.play();
+						//gameObjInstDestroy(*pInst2);
+						pInst2->velocity.x *= -0.5;
+						pInst2->velocity.y *= -0.1;
 					}
 				}
 			}
