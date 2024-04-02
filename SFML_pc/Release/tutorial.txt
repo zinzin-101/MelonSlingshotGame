@@ -1,0 +1,14 @@
+Left click to move object (cactus only)
+Right click to spawn object
+
+Number 1-4 for spawn mode:
+1: cactus
+2: barrel
+3: sling
+4: monster
+
+Move a cactus near the sling to slingshot the cactus
+
+Monsters can be killed by falling barrel or colliding with cactus
+
+Barrels can stack on each other
